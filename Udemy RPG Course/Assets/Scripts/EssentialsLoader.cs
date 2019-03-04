@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EssentialsLoader : MonoBehaviour
 {
-    [SerializeField] GameObject player;
-    [SerializeField] GameObject UICanvas;
+    [SerializeField] GameObject player = null;
+    [SerializeField] GameObject UICanvas = null;
 
     private void Start()
     {

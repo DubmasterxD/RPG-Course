@@ -38,6 +38,10 @@ public class PlayerController : MonoBehaviour
         {
             playerRB.velocity = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")) * moveSpeed;
         }
+        else
+        {
+            playerRB.velocity = Vector2.zero;
+        }
         playerAnim.SetFloat("moveX", playerRB.velocity.x);
         playerAnim.SetFloat("moveY", playerRB.velocity.y);
         if (playerRB.velocity.x != 0 || playerRB.velocity.y != 0)

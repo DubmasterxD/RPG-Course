@@ -8,7 +8,7 @@ public class UIFade : MonoBehaviour
     public static UIFade instance;
 
     [SerializeField] float fadeSpeed = 1f;
-    [SerializeField] Image fadeScreen;
+    [SerializeField] Image fadeScreen = null;
     bool fadeIn;
     bool fadeOut;
 
