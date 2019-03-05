@@ -9,6 +9,7 @@ public class UIFade : MonoBehaviour
 
     [SerializeField] float fadeSpeed = 1f;
     [SerializeField] Image fadeScreen = null;
+
     bool fadeIn;
     bool fadeOut;
 

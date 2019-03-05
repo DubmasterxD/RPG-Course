@@ -6,6 +6,7 @@ public class EssentialsLoader : MonoBehaviour
 {
     [SerializeField] GameObject player = null;
     [SerializeField] GameObject UICanvas = null;
+    [SerializeField] GameObject gameMan = null;
 
     private void Start()
     {
@@ -16,6 +17,10 @@ public class EssentialsLoader : MonoBehaviour
         if (PlayerController.instance == null)
         {
             Instantiate(player);
+        }
+        if(GameManager.instance==null)
+        {
+            Instantiate(gameMan);
         }
     }
 }

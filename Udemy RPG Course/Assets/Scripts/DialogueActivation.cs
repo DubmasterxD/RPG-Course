@@ -6,8 +6,8 @@ public class DialogueActivation : MonoBehaviour
 {
     [SerializeField] string[] lines = null;
     [SerializeField] bool isSign = false;
-    bool canActivate = false;
 
+    bool canActivate = false;
     DialogueManager dialogueManager = null;
 
     private void Start()
@@ -17,7 +17,7 @@ public class DialogueActivation : MonoBehaviour
 
     private void Update()
     {
-        bool isActivated = dialogueManager.GetDialogueBox().activeInHierarchy;
+        bool isActivated = dialogueManager.DialogueBox.activeInHierarchy;
         if (canActivate && Input.GetButtonDown("Fire1") && !isActivated)
         {
             dialogueManager.ShowDialogue(lines, gameObject.name, isSign);

@@ -13,9 +13,11 @@ public class DialogueManager : MonoBehaviour
     string[] dialogueLines = null;
     int currLine = 0;
 
+    public GameObject DialogueBox { get => dialogueBox; }
+
     private void Update()
     {
-        if(Input.GetButtonUp("Fire1"))
+        if(Input.GetButtonUp("Fire1") && dialogueBox.activeInHierarchy)
         {
             currLine++;
             UpdateDialogueText();
@@ -24,41 +26,43 @@ public class DialogueManager : MonoBehaviour
 
     public void ShowDialogue(string[] newLines, string NPCName, bool isSign)
     {
-        PlayerController.instance.canMove = false;
-        if(isSign)
+        if (PlayerController.instance.canMove)
         {
-            nameBox.SetActive(false);
+            PlayerController.instance.canMove = false;
+            if (isSign)
+            {
+                nameBox.SetActive(false);
+            }
+            else
+            {
+                nameBox.SetActive(true);
+                nameText.text = NPCName;
+            }
+            dialogueLines = newLines;
+            currLine = 0;
+            dialogueBox.SetActive(true);
+            UpdateDialogueText();
+            currLine = -1;
         }
-        else
-        {
-            nameBox.SetActive(true);
-            nameText.text = NPCName;
-        }
-        dialogueLines = newLines;
-        currLine = -1;
-        UpdateDialogueText();
-        dialogueBox.SetActive(true);
     }
 
     void UpdateDialogueText()
     {
-        if (currLine >= dialogueLines.Length)
+        if (dialogueBox.activeInHierarchy)
         {
-            dialogueBox.SetActive(false);
-            PlayerController.instance.canMove = true;
+            if (currLine >= dialogueLines.Length)
+            {
+                dialogueBox.SetActive(false);
+                PlayerController.instance.canMove = true;
+            }
+            else if (currLine >= 0)
+            {
+                dialogueText.text = dialogueLines[currLine];
+            }
+            else
+            {
+                dialogueText.text = "";
+            }
         }
-        else if (currLine >= 0)
-        {
-            dialogueText.text = dialogueLines[currLine];
-        }
-        else
-        {
-            dialogueText.text = "";
-        }
-    }
-
-    public GameObject GetDialogueBox()
-    {
-        return dialogueBox;
     }
 }

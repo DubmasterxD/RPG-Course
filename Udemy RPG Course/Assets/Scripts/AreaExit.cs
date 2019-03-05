@@ -10,7 +10,7 @@ public class AreaExit : MonoBehaviour
 
     private void Start()
     {
-        GetComponentInChildren<AreaEntrance>().SetPreviousScene(sceneToLoad);
+        GetComponentInChildren<AreaEntrance>().PreviousScene = sceneToLoad;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

@@ -7,8 +7,10 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
 
     [SerializeField] float moveSpeed = 1f;
+
     Rigidbody2D playerRB = null;
     Animator playerAnim = null;
+
     public bool canMove { get; set; }
     public string lastScene { get; set; }
 
