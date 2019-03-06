@@ -75,4 +75,27 @@ public class CharStats : MonoBehaviour
             currentEXP = 0;
         }
     }
+
+    public void AddHP(int HPToAdd)
+    {
+        currentHP += HPToAdd;
+        if (currentHP > maxHP)
+        {
+            currentHP = maxHP;
+        }
+    }
+
+    public void AddMP(int MPToAdd)
+    {
+        currentMP += MPToAdd;
+        if (currentMP > maxMP)
+        {
+            currentMP = maxMP;
+        }
+    }
+
+    public void AddStr(int StrToAdd)
+    {
+        strength += StrToAdd;
+    }
 }

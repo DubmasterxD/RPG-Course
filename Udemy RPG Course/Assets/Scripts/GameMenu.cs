@@ -8,17 +8,49 @@ public class GameMenu : MonoBehaviour
     [SerializeField] GameObject theMenu = null;
     [SerializeField] GameObject[] windows = null;
     [SerializeField] GameObject[] statusButtons = null;
-    [SerializeField] Text[] nameText, hpText, mpText, levelText, expText;
+    [SerializeField] Text[] nameText = null;
+    [SerializeField] Text[] hpText = null;
+    [SerializeField] Text[] mpText = null;
+    [SerializeField] Text[] levelText = null;
+    [SerializeField] Text[] expText = null;
     [SerializeField] Slider[] expSlider = null;
     [SerializeField] Text[] expPercentage = null;
     [SerializeField] Image[] charImage = null;
     [SerializeField] GameObject[] charStatsHolder = null;
-    [SerializeField] Text statusName, statusHP, statusMP, statusStr, statusDef, statusWpnEq, statusWpnPower, statusArmorEq, statusArmorPower, statusEXP, statusEXPPerecentage;
+    [SerializeField] Text statusName = null;
+    [SerializeField] Text statusHP = null;
+    [SerializeField] Text statusMP = null;
+    [SerializeField] Text statusStr = null;
+    [SerializeField] Text statusDef = null;
+    [SerializeField] Text statusWpnEq = null;
+    [SerializeField] Text statusWpnPower = null;
+    [SerializeField] Text statusArmorEq = null;
+    [SerializeField] Text statusArmorPower = null;
+    [SerializeField] Text statusEXP = null;
+    [SerializeField] Text statusEXPPerecentage = null;
     [SerializeField] Slider statusEXPSlider = null;
     [SerializeField] Image statusImage = null;
+    [SerializeField] ItemButton[] itemButtons = null;
+    [SerializeField] int selectedItem = 0;
+    [SerializeField] Item activeItem = null;
+    [SerializeField] Text itemName = null;
+    [SerializeField] Text itemDescription = null;
+    [SerializeField] Text useButtonText = null;
+    [SerializeField] GameObject itemCharChoiceMenu = null;
+    [SerializeField] Text[] itemCharChoiceNames = null;
 
     CharStats[] playerStats = null;
     int charsInfoIndex = 0;
+
+    public static GameMenu instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
 
     private void Update()
     {
@@ -80,6 +112,7 @@ public class GameMenu : MonoBehaviour
             windows[windowNumber].SetActive(false);
             windows[charsInfoIndex].SetActive(true);
         }
+        itemCharChoiceMenu.SetActive(false);
     }
 
     public void OpenStatsMenu()
@@ -123,6 +156,7 @@ public class GameMenu : MonoBehaviour
         }
         theMenu.SetActive(false);
         PlayerController.instance.canMove = true;
+        itemCharChoiceMenu.SetActive(false);
     }
 
     public void OpenMenu()
@@ -133,6 +167,74 @@ public class GameMenu : MonoBehaviour
             theMenu.SetActive(true);
             PlayerController.instance.canMove = false;
         }
+    }
+
+    public void ShowItems()
+    {
+        for(int i=0; i<itemButtons.Length;i++)
+        {
+            itemButtons[i].Index = i;
+            if (GameManager.instance.ItemsHeld[i]!="")
+            {
+                itemButtons[i].ItemImage.gameObject.SetActive(true);
+                itemButtons[i].ItemImage.sprite=GameManager.instance.GetItemDetails(GameManager.instance.ItemsHeld[i]).ItemSprite;
+                itemButtons[i].AmountText.text = GameManager.instance.NumberOfItems[i].ToString();
+            }
+            else
+            {
+                itemButtons[i].ItemImage.gameObject.SetActive(false);
+                itemButtons[i].AmountText.text = "";
+            }
+        }
+    }
+
+    public void SortItems()
+    {
+        GameManager.instance.SortItems();
+    }
+
+    public void SelectItem(Item newItem)
+    {
+        activeItem = newItem;
+        if(activeItem.IsItem)
+        {
+            useButtonText.text = "Use";
+        }
+        else if(activeItem.IsArmour || activeItem.IsWeapon)
+        {
+            useButtonText.text = "Equip";
+        }
+        itemName.text = activeItem.ItemName;
+        itemDescription.text = activeItem.Description;
+    }
+
+    public void DiscardItem()
+    {
+        if(activeItem!=null)
+        {
+            GameManager.instance.RemoveItem(activeItem.ItemName);
+        }
+    }
+
+    public void OpenItemCharacterChoice()
+    {
+        itemCharChoiceMenu.SetActive(true);
+        for(int i=0; i<itemCharChoiceNames.Length;i++)
+        {
+            itemCharChoiceNames[i].text = GameManager.instance.PlayerStats[i].CharName;
+            itemCharChoiceNames[i].transform.parent.gameObject.SetActive(GameManager.instance.PlayerStats[i].gameObject.activeInHierarchy);
+        }
+    }
+
+    public void CloseItemCharacterChoice()
+    {
+        itemCharChoiceMenu.SetActive(false);
+    }
+
+    public void UseItem(int selectChar)
+    {
+        activeItem.Use(selectChar);
+        CloseItemCharacterChoice();
     }
 }
 
