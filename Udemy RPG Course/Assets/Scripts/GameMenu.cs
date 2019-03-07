@@ -38,6 +38,7 @@ public class GameMenu : MonoBehaviour
     [SerializeField] Text useButtonText = null;
     [SerializeField] GameObject itemCharChoiceMenu = null;
     [SerializeField] Text[] itemCharChoiceNames = null;
+    [SerializeField] Text goldText = null;
 
     CharStats[] playerStats = null;
     int charsInfoIndex = 0;
@@ -90,6 +91,7 @@ public class GameMenu : MonoBehaviour
                 charStatsHolder[i].SetActive(false);
             }
         }
+        goldText.text = "Gold:\n" + GameManager.instance.CurrentGold;
     }
 
     public void ToggleWindow(int windowNumber)

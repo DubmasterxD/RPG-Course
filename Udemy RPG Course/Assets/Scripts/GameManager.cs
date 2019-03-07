@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     public CharStats[] PlayerStats { get => playerStats; }
     public string[] ItemsHeld { get => itemsHeld;}
     public int[] NumberOfItems { get => numberOfItems; }
+    public int CurrentGold { get => currentGold; }
+
+    [SerializeField] int currentGold = 0;
 
     private void Awake()
     {
