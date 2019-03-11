@@ -19,13 +19,13 @@ public class CharStats : MonoBehaviour
     [SerializeField] Sprite charImage = null;
 
     public string CharName { get => charName; }
-    public int PlayerLevel { get => playerLevel; }
-    public int MaxLevel { get => maxLevel; }
-    public int BaseEXP { get => baseEXP; }
-    public int MaxHP { get => maxHP; }
-    public int MaxMP { get => maxMP; }
-    public int Strength { get => strength; }
-    public int Defence { get => defence; }
+    public int PlayerLevel { get => playerLevel; set => playerLevel = value; }
+    public int MaxLevel { get => maxLevel; set => maxLevel = value; }
+    public int BaseEXP { get => baseEXP; set => baseEXP = value; }
+    public int MaxHP { get => maxHP; set => maxHP = value; }
+    public int MaxMP { get => maxMP; set => maxMP = value; }
+    public int Strength { get => strength; set => strength = value; }
+    public int Defence { get => defence; set => defence = value; }
     public int WeaponPower { get => weaponPower; set => weaponPower = value; }
     public int ArmorPower { get => armorPower; set => armorPower = value; }
     public string EquippedWeapon { get => equippedWeapon; set => equippedWeapon = value; }
@@ -33,9 +33,9 @@ public class CharStats : MonoBehaviour
     public Sprite CharImage { get => charImage; set => charImage = value; }
 
     public int[] expToNextLevel { get; private set; }
-    public int currentEXP { get; private set; }
-    public int currentHP { get; private set; }
-    public int currentMP { get; private set; }
+    public int currentEXP { get;  set; }
+    public int currentHP { get;  set; }
+    public int currentMP { get;  set; }
     
     private void Start()
     {

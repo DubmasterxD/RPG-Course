@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 public class CameraController : MonoBehaviour
 {
     Transform target;
+
+    [SerializeField] int musicToPlay = 0;
+    private bool musicStarted = false;
         
     private void Start()
     {
@@ -14,6 +17,14 @@ public class CameraController : MonoBehaviour
     
     private void LateUpdate()
     {
-        transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
+        if (target != null)
+        {
+            transform.position = new Vector3(target.position.x, target.position.y, transform.position.z);
+            if (!musicStarted)
+            {
+                musicStarted = true;
+                AudioManager.instance.PlayBGM(musicToPlay);
+            }
+        }
     }
 }

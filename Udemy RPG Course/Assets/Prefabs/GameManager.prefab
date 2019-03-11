@@ -66,6 +66,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2307277209558971793}
   - component: {fileID: 4228344123819129374}
+  - component: {fileID: 6466504115708856006}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -156,6 +157,25 @@ MonoBehaviour:
   - {fileID: 6389470214615563762, guid: 66f1286397066af4bbe04027850611ef, type: 3}
   - {fileID: 2349420612006552680, guid: 6e03fd68df4e961458b75bc0555df365, type: 3}
   currentGold: 50
+--- !u!114 &6466504115708856006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3816949627773339664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305eb872e7aab134e876d899c8a873fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questMarkerNames:
+  - as
+  - 
+  - 
+  - 
+  - 
+  questMarkerCompletion: 
 --- !u!1 &5001285328150759894
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cba76e411f6be9547913dd81d6e2c72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  charName: Woody
+  charName: Ralph
   playerLevel: 1
   maxLevel: 100
   baseEXP: 1000

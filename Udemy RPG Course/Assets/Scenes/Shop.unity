@@ -235,8 +235,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1693236673
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300048, guid: fb8cc55af4b7a034584793949fd90500, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -8699,6 +8699,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4810652362530038759, guid: d5eb61c5847bb7447bf9d545ab909187,
+        type: 3}
+      propertyPath: musicToPlay
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5eb61c5847bb7447bf9d545ab909187, type: 3}
 --- !u!1 &1017017201 stripped
@@ -10314,6 +10319,16 @@ PrefabInstance:
         type: 3}
       propertyPath: sceneToLoad
       value: Town
+      objectReference: {fileID: 0}
+    - target: {fileID: 7437055103572251184, guid: cb96847e83c6095408713517fbdf1b23,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 7437055103572251184, guid: cb96847e83c6095408713517fbdf1b23,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.71
       objectReference: {fileID: 0}
     - target: {fileID: 1454282914939335768, guid: cb96847e83c6095408713517fbdf1b23,
         type: 3}

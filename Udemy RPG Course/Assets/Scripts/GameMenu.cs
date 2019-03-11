@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameMenu : MonoBehaviour
 {
@@ -31,7 +32,6 @@ public class GameMenu : MonoBehaviour
     [SerializeField] Slider statusEXPSlider = null;
     [SerializeField] Image statusImage = null;
     [SerializeField] ItemButton[] itemButtons = null;
-    [SerializeField] int selectedItem = 0;
     [SerializeField] Item activeItem = null;
     [SerializeField] Text itemName = null;
     [SerializeField] Text itemDescription = null;
@@ -39,11 +39,14 @@ public class GameMenu : MonoBehaviour
     [SerializeField] GameObject itemCharChoiceMenu = null;
     [SerializeField] Text[] itemCharChoiceNames = null;
     [SerializeField] Text goldText = null;
+    [SerializeField] string mainMenuName = "";
 
     CharStats[] playerStats = null;
     int charsInfoIndex = 0;
 
     public static GameMenu instance;
+
+    public GameObject TheMenu { get => theMenu; }
 
     private void Awake()
     {
@@ -71,9 +74,9 @@ public class GameMenu : MonoBehaviour
     public void UpdatePlayerStats()
     {
         playerStats = GameManager.instance.PlayerStats;
-        for(int i=0; i<playerStats.Length; i++)
+        for (int i = 0; i < playerStats.Length; i++)
         {
-            if(playerStats[i].gameObject.activeInHierarchy)
+            if (playerStats[i].gameObject.activeInHierarchy)
             {
                 charStatsHolder[i].SetActive(true);
                 nameText[i].text = playerStats[i].CharName;
@@ -83,7 +86,7 @@ public class GameMenu : MonoBehaviour
                 expText[i].text = "EXP: " + playerStats[i].currentEXP + "/" + playerStats[i].expToNextLevel[playerStats[i].PlayerLevel];
                 expSlider[i].maxValue = playerStats[i].expToNextLevel[playerStats[i].PlayerLevel];
                 expSlider[i].value = playerStats[i].currentEXP;
-                expPercentage[i].text = "" + Mathf.FloorToInt(expSlider[i].normalizedValue * 100) +"%";
+                expPercentage[i].text = "" + Mathf.FloorToInt(expSlider[i].normalizedValue * 100) + "%";
                 charImage[i].sprite = playerStats[i].CharImage;
             }
             else
@@ -101,7 +104,7 @@ public class GameMenu : MonoBehaviour
         {
             for (int i = 0; i < windows.Length; i++)
             {
-                if(windows[i].name=="Chars info")
+                if (windows[i].name == "Chars info")
                 {
                     charsInfoIndex = i;
                 }
@@ -151,7 +154,7 @@ public class GameMenu : MonoBehaviour
         for (int i = 0; i < windows.Length; i++)
         {
             windows[i].SetActive(false);
-            if(windows[i].name=="Chars info")
+            if (windows[i].name == "Chars info")
             {
                 windows[i].SetActive(true);
             }
@@ -173,13 +176,13 @@ public class GameMenu : MonoBehaviour
 
     public void ShowItems()
     {
-        for(int i=0; i<itemButtons.Length;i++)
+        for (int i = 0; i < itemButtons.Length; i++)
         {
             itemButtons[i].Index = i;
-            if (GameManager.instance.ItemsHeld[i]!="")
+            if (GameManager.instance.ItemsHeld[i] != "")
             {
                 itemButtons[i].ItemImage.gameObject.SetActive(true);
-                itemButtons[i].ItemImage.sprite=GameManager.instance.GetItemDetails(GameManager.instance.ItemsHeld[i]).ItemSprite;
+                itemButtons[i].ItemImage.sprite = GameManager.instance.GetItemDetails(GameManager.instance.ItemsHeld[i]).ItemSprite;
                 itemButtons[i].AmountText.text = GameManager.instance.NumberOfItems[i].ToString();
             }
             else
@@ -198,11 +201,11 @@ public class GameMenu : MonoBehaviour
     public void SelectItem(Item newItem)
     {
         activeItem = newItem;
-        if(activeItem.IsItem)
+        if (activeItem.IsItem)
         {
             useButtonText.text = "Use";
         }
-        else if(activeItem.IsArmour || activeItem.IsWeapon)
+        else if (activeItem.IsArmour || activeItem.IsWeapon)
         {
             useButtonText.text = "Equip";
         }
@@ -212,7 +215,7 @@ public class GameMenu : MonoBehaviour
 
     public void DiscardItem()
     {
-        if(activeItem!=null)
+        if (activeItem != null && GameManager.instance.FindItem(activeItem.ItemName) != -1)
         {
             GameManager.instance.RemoveItem(activeItem.ItemName);
         }
@@ -220,11 +223,14 @@ public class GameMenu : MonoBehaviour
 
     public void OpenItemCharacterChoice()
     {
-        itemCharChoiceMenu.SetActive(true);
-        for(int i=0; i<itemCharChoiceNames.Length;i++)
+        if (activeItem!=null &&GameManager.instance.FindItem(activeItem.ItemName) != -1)
         {
-            itemCharChoiceNames[i].text = GameManager.instance.PlayerStats[i].CharName;
-            itemCharChoiceNames[i].transform.parent.gameObject.SetActive(GameManager.instance.PlayerStats[i].gameObject.activeInHierarchy);
+            itemCharChoiceMenu.SetActive(true);
+            for (int i = 0; i < itemCharChoiceNames.Length; i++)
+            {
+                itemCharChoiceNames[i].text = GameManager.instance.PlayerStats[i].CharName;
+                itemCharChoiceNames[i].transform.parent.gameObject.SetActive(GameManager.instance.PlayerStats[i].gameObject.activeInHierarchy);
+            }
         }
     }
 
@@ -238,5 +244,19 @@ public class GameMenu : MonoBehaviour
         activeItem.Use(selectChar);
         CloseItemCharacterChoice();
     }
-}
 
+    public void SaveGame()
+    {
+        GameManager.instance.SaveData();
+        QuestManager.instance.SaveQuestData();
+    }
+
+    public void QuitGame()
+    {
+        SceneManager.LoadScene(mainMenuName);
+        Destroy(GameManager.instance.gameObject);
+        Destroy(PlayerController.instance.gameObject);
+        Destroy(AudioManager.instance.gameObject);
+        Destroy(gameObject);
+    }
+}

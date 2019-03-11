@@ -9,6 +9,9 @@ public class DialogueActivation : MonoBehaviour
 
     bool canActivate = false;
     DialogueManager dialogueManager = null;
+    [SerializeField] bool shouldActivate = false;
+    [SerializeField] string questToMark = "";
+    [SerializeField] bool markComplete = true;
 
     private void Start()
     {
@@ -21,6 +24,10 @@ public class DialogueActivation : MonoBehaviour
         if (canActivate && Input.GetButtonDown("Fire1") && !isActivated)
         {
             dialogueManager.ShowDialogue(lines, gameObject.name, isSign);
+            if (shouldActivate)
+            {
+                dialogueManager.ShouldActivateQuestAtEnd(questToMark, markComplete);
+            }
         }
     }
 

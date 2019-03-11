@@ -12,6 +12,9 @@ public class DialogueManager : MonoBehaviour
 
     string[] dialogueLines = null;
     int currLine = 0;
+    string questToMark;
+    bool markQuestComplete;
+    bool shouldMarkQuest;
 
     public GameObject DialogueBox { get => dialogueBox; }
 
@@ -54,6 +57,18 @@ public class DialogueManager : MonoBehaviour
             {
                 dialogueBox.SetActive(false);
                 PlayerController.instance.canMove = true;
+                if(shouldMarkQuest)
+                {
+                    shouldMarkQuest = false;
+                    if(markQuestComplete)
+                    {
+                        QuestManager.instance.MarkQuestComplete(questToMark);
+                    }
+                    else
+                    {
+                        QuestManager.instance.MarkQuestIncomplete(questToMark);
+                    }
+                }
             }
             else if (currLine >= 0)
             {
@@ -64,5 +79,12 @@ public class DialogueManager : MonoBehaviour
                 dialogueText.text = "";
             }
         }
+    }
+
+    public void ShouldActivateQuestAtEnd(string questName, bool markComplete)
+    {
+        questToMark = questName;
+        markQuestComplete = markComplete;
+        shouldMarkQuest = true;
     }
 }

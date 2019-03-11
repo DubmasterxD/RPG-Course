@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,12 +9,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] CharStats[] playerStats = null;
 
-    [SerializeField] string[] itemsHeld=null;
+    [SerializeField] string[] itemsHeld = null;
     [SerializeField] int[] numberOfItems = null;
     [SerializeField] Item[] referenceItems = null;
 
     public CharStats[] PlayerStats { get => playerStats; }
-    public string[] ItemsHeld { get => itemsHeld;}
+    public string[] ItemsHeld { get => itemsHeld; }
     public int[] NumberOfItems { get => numberOfItems; }
     public int CurrentGold { get => currentGold; }
 
@@ -60,20 +61,20 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-        for(int i=0; i<itemsHeld.Length;i++)
+        for (int i = 0; i < itemsHeld.Length; i++)
         {
-            for(int j=i+1;j<itemsHeld.Length;j++)
+            for (int j = i + 1; j < itemsHeld.Length; j++)
             {
                 if (Greater(itemsHeld[j], itemsHeld[i]))
                 {
                     Swap(j, i);
                 }
-                if(itemsHeld[j]=="")
+                if (itemsHeld[j] == "")
                 {
                     break;
                 }
             }
-            if(itemsHeld[i]=="")
+            if (itemsHeld[i] == "")
             {
                 break;
             }
@@ -147,7 +148,7 @@ public class GameManager : MonoBehaviour
             {
                 for (int i = 0; i < itemsHeld.Length; i++)
                 {
-                    if(itemsHeld[i]=="")
+                    if (itemsHeld[i] == "")
                     {
                         newItemPosition = i;
                         break;
@@ -158,28 +159,18 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("Item "+itemToAdd+" doesn't exist");
+                Debug.LogError("Item " + itemToAdd + " doesn't exist");
             }
         }
     }
 
     public void RemoveItem(string itemToRemove)
     {
-        bool foundItem = false;
-        int itemPosition = 0;
-        for (int i = 0; i< itemsHeld.Length;i++)
-        {
-            if(itemsHeld[i]==itemToRemove)
-            {
-                foundItem = true;
-                itemPosition = i;
-                break;  
-            }
-        }
-        if(foundItem)
+        int itemPosition = FindItem(itemToRemove);
+        if (itemPosition != -1)
         {
             numberOfItems[itemPosition]--;
-            if(numberOfItems[itemPosition]<=0)
+            if (numberOfItems[itemPosition] <= 0)
             {
                 itemsHeld[itemPosition] = "";
             }
@@ -188,6 +179,101 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogError("Couldn't find " + itemToRemove);
+        }
+    }
+
+    public int FindItem(string itemToFind)
+    {
+        for (int i = 0; i < itemsHeld.Length; i++)
+        {
+            if (itemsHeld[i] == itemToFind)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void SpendGold(int goldToSpend)
+    {
+        currentGold -= goldToSpend;
+    }
+
+    public void AddGold(int goldToAdd)
+    {
+        currentGold += goldToAdd;
+    }
+
+    public void SaveData()
+    {
+        PlayerPrefs.SetString("Current_Scene", SceneManager.GetActiveScene().name);
+        PlayerPrefs.SetFloat("Player_Position_x", PlayerController.instance.transform.position.x);
+        PlayerPrefs.SetFloat("Player_Position_y", PlayerController.instance.transform.position.y);
+        PlayerPrefs.SetFloat("Player_Position_z", PlayerController.instance.transform.position.z);
+
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            if (playerStats[i].gameObject.activeInHierarchy)
+            {
+                PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_active", 1);
+            }
+            else
+            {
+                PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_active", 0);
+            }
+
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_Level", playerStats[i].PlayerLevel);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_CurrentExp", playerStats[i].currentEXP);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_CurrentHP", playerStats[i].currentHP);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_MaxHP", playerStats[i].MaxHP);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_CurrentMP", playerStats[i].currentMP);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_MaxMP", playerStats[i].MaxMP);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_Strength", playerStats[i].Strength);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_Defence", playerStats[i].Defence);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_WpnPwr", playerStats[i].WeaponPower);
+            PlayerPrefs.SetInt("Player_" + playerStats[i].CharName + "_ArmrPwr", playerStats[i].ArmorPower);
+            PlayerPrefs.SetString("Player_" + playerStats[i].CharName + "_EqWpn", playerStats[i].EquippedWeapon);
+            PlayerPrefs.SetString("Player_" + playerStats[i].CharName + "_EqArmr", playerStats[i].EquippedArmor);
+        }
+
+        for (int i = 0; i < itemsHeld.Length; i++)
+        {
+            PlayerPrefs.SetString("ItemInInventory_" + i, itemsHeld[i]);
+            PlayerPrefs.SetInt("ItemAmount_" + i, numberOfItems[i]);
+        }
+    }
+
+    public void LoadData()
+    {
+        PlayerController.instance.transform.position = new Vector3(PlayerPrefs.GetFloat("Player_Position_x"), PlayerPrefs.GetFloat("Player_Position_y"), PlayerPrefs.GetFloat("Player_Position_z"));
+        for (int i = 0; i < playerStats.Length; i++)
+        {
+            if (PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_active") == 0)
+            {
+                playerStats[i].gameObject.SetActive(false);
+            }
+            else
+            {
+                playerStats[i].gameObject.SetActive(true);
+            }
+            playerStats[i].PlayerLevel = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_Level");
+            playerStats[i].currentEXP = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_CurrentExp");
+            playerStats[i].currentHP = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_CurrentHP");
+            playerStats[i].MaxHP = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_MaxHP");
+            playerStats[i].currentMP = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_CurrentMP");
+            playerStats[i].MaxMP = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_MaxMP");
+            playerStats[i].Strength = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_Strength");
+            playerStats[i].Defence = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_Defence");
+            playerStats[i].WeaponPower = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_WpnPwr");
+            playerStats[i].WeaponPower = PlayerPrefs.GetInt("Player_" + playerStats[i].CharName + "_ArmrPwr");
+            playerStats[i].EquippedWeapon = PlayerPrefs.GetString("Player_" + playerStats[i].CharName + "_EqWpn");
+            playerStats[i].EquippedArmor = PlayerPrefs.GetString("Player_" + playerStats[i].CharName + "_EqArmr");
+        }
+
+        for (int i = 0; i < itemsHeld.Length; i++)
+        {
+            itemsHeld[i] = PlayerPrefs.GetString("ItemInInventory_" + i);
+            numberOfItems[i] = PlayerPrefs.GetInt("ItemAmount_" + i);
         }
     }
 }
